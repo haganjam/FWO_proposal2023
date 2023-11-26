@@ -2,7 +2,7 @@
 ## time series plots of their densities, traits, and niche overlap /
 ## competitive differences. It is Figure 1 in the manuscript.
 
-source("./functions.R") ## for integrating the ODEs
+source("code/pastore-2021/functions.R") ## for integrating the ODEs
 require(cowplot) ## for joining and labeling plots in a grid
 theme_set(theme_bw()) ## set default theme
 theme_update(panel.grid.major=element_blank(), panel.grid.minor=element_blank())
@@ -78,6 +78,7 @@ densplot <- ggplot(sol) +
   scale_colour_manual(values=c("#0072B2", "#E69F00")) +
   annotate(geom="text", label="C", x=0, y=5.2, fontface="bold") +
   theme(legend.position="none")
+densplot
 
 ## create plot of species traits through time
 traitplot <- ggplot(sol) +
@@ -89,6 +90,7 @@ traitplot <- ggplot(sol) +
   scale_fill_manual(values=c("#0072B2", "#E69F00")) +
   annotate(geom="text", label="D", x=0, y=0.70, fontface="bold") +
   theme(legend.position="none")
+traitplot
 
 ## create plot of niche overlap and competitive difference through time
 rkplot <- rk %>%
@@ -101,10 +103,5 @@ rkplot <- rk %>%
   annotate(geom="text", label="E", x=0, y=1.47, fontface="bold") +
   guides(colour=guide_legend(keyheight=0.9)) +
   theme(legend.title=element_blank(), legend.position=c(0.59, 0.52))
+rkplot
 
-## arrange the five sub-plots in a grid
-plot_grid(
-  snapshot1, snapshot2,
-  plot_grid(densplot, traitplot, rkplot, ncol=1),
-  nrow=1
-)
