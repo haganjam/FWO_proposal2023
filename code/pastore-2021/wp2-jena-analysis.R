@@ -186,6 +186,12 @@ p4 <-
   theme_meta()
 plot(p4)
 
+# export the plots
+plot_list <- list(p1, p2, p3, p4)
+for(i in 1:length(plot_list)) {
+  saveRDS(object = plot_list[[i]], file = paste0("figures-tables/jena-plot-", i, ".rds") )
+}
+
 # mixture plot2
 mix2 <- dplyr::filter(jena_mix, plotcode == "B4A14")
 head(mix2)
