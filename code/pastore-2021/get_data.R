@@ -10,8 +10,8 @@
 ## where [output_file.csv] is the name, with path, of the
 ## data file to which the output should be written.
 
-
-source("./functions.R") ## functions for integrating ODEs and organizing data
+# load relevant functions
+source("code/pastore-2021/functions.R") ## functions for integrating ODEs and organizing data
 
 
 ## --------------------------- parameter definitions ----------------------------
@@ -23,20 +23,21 @@ tmax <- 1e6 ## max simulation time
 time <- seq(0, tmax, by=tmax/10) ## sampling points in time for the ODE solutions
 
 fact <- expand.grid( ## table for factorial numerical experiment
-  w=c(0.5, 1, 3, 5), ## competition widths
-  theta=exp(seq(log(0.5), log(10), l=20)), ## intrinsic growth widths
-  K1=exp(seq(log(0.2), log(5), l=51)), ## species 1 max intrinsic growth rates
-  mu1=seq(-10, 10, l=41), ## species 1 initial trait means
-  mu2=seq(-10, 10, l=41) ## species 2 initial trait means
+  w=c(3), ## competition widths
+  theta=exp(log(5)), ## intrinsic growth widths
+  K1=exp(log(2)), ## species 1 max intrinsic growth rates
+  mu1=c(2.5), ## species 1 initial trait means
+  mu2=c(-2.5) ## species 2 initial trait means
 ) %>%
   as_tibble %>% ## convert data frame to tibble
   filter(mu2<=mu1) %>% ## species 1 always to the right of species 2 initially
   ## confine initial trait means to [-theta, theta] interval:
   filter(mu1>=(-theta), mu1<=theta, mu2>=(-theta), mu2<theta)
+print(fact)
 
 ## write header to stdout (or file, if the output is redirected):
-write(paste0("w,theta,K1,muinit1,muinit2,ninit1,ninit2,mufinal1,mufinal2,",
-             "nfinal1,nfinal2,nichei,fiti,nichef,fitf,coexi,coexf"), stdout())
+# write(paste0("w,theta,K1,muinit1,muinit2,ninit1,ninit2,mufinal1,mufinal2,",
+             # "nfinal1,nfinal2,nichei,fiti,nichef,fitf,coexi,coexf"), stdout())
 
 
 ## ---------------------------- perform calculations ----------------------------
@@ -87,6 +88,6 @@ for (r in 1:nrow(fact)) { ## go through each row of experiments
               fitf, ## final competitive diff
               coexi, ## did the species coexist initially?
               coexf, ## did the species coexist at the end?
-              sep=","), stdout()) ## write row to stdout
+              sep=","), "figures-tables/pastore-2021-output.txt") ## write row to stdout
   
 } ## for loop ends
