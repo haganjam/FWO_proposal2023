@@ -5,8 +5,14 @@
 #' the net biodiversity effect changes if monocultures are allowed to evolve
 #'
 
+# load relevant libraries
+library(dplyr)
+
 # load plotting theme
 source("code/helper-plotting-theme.R")
+
+# load Pastore et al. (2021) functions
+source("code/pastore-2021/functions.R")
 
 # set the parameters of the mixtures
 w <- 0.1 ## competition width
@@ -40,6 +46,11 @@ mix <-
   dplyr::rename(Y = n,
                 traitY = m)
 
+# get the growth rate function (equation 3, Pastore et al. 2021)
+mix <- 
+  mix |>
+  dplyr::mutate(traitY = ifelse(species == 1, K[1] -(traitY^2), K[2] -(traitY^2) ))
+
 # get the evolution of the monocultures through time
 
 # loop over each species
@@ -69,6 +80,11 @@ mono <-
   dplyr::rename(M = n,
                 traitM = m)
 
+# get the trait value that incorporates carrying capacity: (equation 3, Pastore et al. 2021)
+mono <- 
+  mono |>
+  dplyr::mutate(traitM = ifelse(species == 1, K[1] -(traitM^2), K[2] -(traitM^2) ))
+
 # plot the monocultures and mixtures
 
 # get maximum abundance
@@ -80,9 +96,10 @@ p1 <-
   geom_line(linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a+0.5)) +
   scale_colour_manual(values = c("#4c8424", "#d49404")) +
-  xlab("Time") +
+  xlab("Generations") +
   ylab("Biomass in mixture") +
-  theme_meta()
+  theme_meta() +
+  theme(legend.position = "bottom")
 plot(p1)
 
 p2 <- 
@@ -90,8 +107,8 @@ p2 <-
        mapping = aes(x = time, y = M)) +
   geom_line(colour = "#4c8424", linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a+0.5) ) +
-  xlab("Time") +
-  ylab("Biomass in mixture") +
+  xlab("Generations") +
+  ylab("Biomass in monoculture") +
   theme_meta()
 plot(p2)
 
@@ -100,10 +117,56 @@ p3 <-
        mapping = aes(x = time, y = M)) +
   geom_line(colour = "#d49404", linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a+0.5)) +
-  xlab("Time") +
+  xlab("Generations") +
   ylab("") +
   theme_meta()
 plot(p3)
+
+# plot the trait values
+
+# get range of trait values
+range_t <- range(c(mix$traitY, mono$traitM))
+
+q1 <- 
+  ggplot(data = mix |> dplyr::mutate(Species = as.character(species)),
+         mapping = aes(x = time, y = traitY, colour = Species)) +
+  geom_line(linewidth = 0.75) +
+  scale_y_continuous(limits = c(range_t[1]-0.05, range_t[2]+0.05)) +
+  scale_colour_manual(values = c("#4c8424", "#d49404")) +
+  xlab("Generations") +
+  ylab("Trait value in mixture") +
+  theme_meta() +
+  theme(legend.position = "bottom")
+plot(q1)
+
+q2 <- 
+  ggplot(data = dplyr::filter(mono, species == 1),
+         mapping = aes(x = time, y = traitM)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_line(colour = "#4c8424", linewidth = 0.75) +
+  scale_y_continuous(limits = c(range_t[1]-0.05, range_t[2]+0.05)) +
+  xlab("Generations") +
+  ylab("Trait value in monoculture") +
+  theme_meta()
+plot(q2)
+
+q3 <- 
+  ggplot(data = dplyr::filter(mono, species == 2),
+         mapping = aes(x = time, y = traitM)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_line(colour = "#d49404", linewidth = 0.75) +
+  scale_y_continuous(limits = c(range_t[1]-0.05, range_t[2]+0.05)) +
+  xlab("Generations") +
+  ylab("") +
+  theme_meta()
+plot(q3)
+
+# plot coexistence conditions
+
+
+
+
+
 
 # combine the mixture and monoculture data
 bef_df <- dplyr::full_join(mono, mix, by = c("time", "species"))
@@ -129,7 +192,7 @@ p4 <-
   geom_line() +
   xlab("Time") +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  ylab("Net biodiversity effect (NBE)") +
+  ylab("Net biodiversity effect") +
   scale_y_continuous(limits = c(-0.1, max(nbe_df$NBE) + 0.1)) +
   theme_meta()
 plot(p4)

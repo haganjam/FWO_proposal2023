@@ -135,15 +135,21 @@ mix1 <- dplyr::full_join(mono1, mix1, by = c("time", "species"))
 # get maximum abundance
 max_a1 <- max( c(max(mix1$Y), max(mix1$M)) )
 
+mix1 <- 
+  mix1 |> 
+  dplyr::mutate(Species = as.character(species)) |>
+  dplyr::mutate(Species = ifelse(Species == "Poa.pra", "P.pratensis", "P.lanceolata"))
+
 p1 <- 
-  ggplot(data = mix1 |> dplyr::mutate(Species = as.character(species)),
+  ggplot(data = mix1,
          mapping = aes(x = time, y = Y, colour = Species)) +
   geom_line(linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a1+5)) +
   scale_colour_manual(values = c("#4c8424", "#d49404")) +
   xlab("Time") +
   ylab("Biomass in mixture") +
-  theme_meta()
+  theme_meta() +
+  theme(legend.position = "bottom")
 plot(p1)
 
 p2 <- 
@@ -178,10 +184,10 @@ nbe1 <-
 p4 <- 
   ggplot(data = nbe1,
          mapping = aes(x = time, y = NBE)) +
-  geom_line() +
+  geom_line(linewidth = 0.75) +
   xlab("Time") +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  ylab("Net biodiversity effect (NBE)") +
+  ylab("Net biodiversity effect") +
   scale_y_continuous() +
   theme_meta()
 plot(p4)
@@ -242,7 +248,8 @@ p1 <-
   scale_colour_manual(values = c("#4c8424", "#d49404")) +
   xlab("Time") +
   ylab("Biomass in mixture") +
-  theme_meta()
+  theme_meta() +
+  theme(legend.position = "bottom")
 plot(p1)
 
 p2 <- 
