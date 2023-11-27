@@ -52,11 +52,12 @@ for(i in 1:S) {
 trait_df <- dplyr::bind_rows(trait_sp)
 
 # plot the results
+cols <- c("#2c6ca4", "#d49404", "#bc5404", "#747474", "#4c8424")
 p1 <- 
   ggplot(data = trait_df, 
        mapping = aes(x = time, y = trait, colour = sp)) +
   geom_line() +
-  scale_colour_manual(values = MetBrewer::met.brewer("Lakota", n = 5)) +
+  scale_colour_manual(values = cols) +
   theme_meta() +
   theme(legend.position = "none", 
         axis.text = element_blank(), 

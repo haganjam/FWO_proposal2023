@@ -153,7 +153,6 @@ q3 <-
 plot(q3)
 
 # plot coexistence conditions
-gc <- c("#747474")
 q4 <-
   rk |> 
   dplyr::rename('Niche overlap' = rho,
