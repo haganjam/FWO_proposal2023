@@ -146,7 +146,7 @@ p1 <-
   geom_line(linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a1+5)) +
   scale_colour_manual(values = c("#4c8424", "#d49404")) +
-  xlab("Time") +
+  xlab("Months") +
   ylab("Biomass in mixture") +
   theme_meta() +
   theme(legend.position = "bottom")
@@ -157,7 +157,7 @@ p2 <-
          mapping = aes(x = time, y = M)) +
   geom_line(colour = "#4c8424", linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a1+5) ) +
-  xlab("Time") +
+  xlab("Months") +
   ylab("Biomass in monoculture") +
   theme_meta()
 plot(p2)
@@ -167,7 +167,7 @@ p3 <-
          mapping = aes(x = time, y = M)) +
   geom_line(colour = "#d49404", linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a1+5)) +
-  xlab("Time") +
+  xlab("Months") +
   ylab("") +
   theme_meta()
 plot(p3)

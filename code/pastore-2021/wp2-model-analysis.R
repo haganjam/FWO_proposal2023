@@ -25,7 +25,7 @@ ninit <- c(0.5, 0.5) ## initial densities
 muinit <- c(-0.09, 0.09) ## initial trait means
 ic <- c(ninit, muinit) ## initial conditions coerced into a vector
 
-tmax <- 100 ## time to integrate equations for
+tmax <- 30 ## time to integrate equations for
 stepout <- tmax/150 ## time step size for output
 time <- seq(0, tmax, by=stepout) ## sampling points in time
 
@@ -45,11 +45,6 @@ mix <-
   mix |>
   dplyr::rename(Y = n,
                 traitY = m)
-
-# get the growth rate function (equation 3, Pastore et al. 2021)
-mix <- 
-  mix |>
-  dplyr::mutate(traitY = ifelse(species == 1, K[1] -(traitY^2), K[2] -(traitY^2) ))
 
 # get the evolution of the monocultures through time
 
@@ -79,11 +74,6 @@ mono <-
   mono |>
   dplyr::rename(M = n,
                 traitM = m)
-
-# get the trait value that incorporates carrying capacity: (equation 3, Pastore et al. 2021)
-mono <- 
-  mono |>
-  dplyr::mutate(traitM = ifelse(species == 1, K[1] -(traitM^2), K[2] -(traitM^2) ))
 
 # plot the monocultures and mixtures
 
@@ -130,6 +120,7 @@ range_t <- range(c(mix$traitY, mono$traitM))
 q1 <- 
   ggplot(data = mix |> dplyr::mutate(Species = as.character(species)),
          mapping = aes(x = time, y = traitY, colour = Species)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
   geom_line(linewidth = 0.75) +
   scale_y_continuous(limits = c(range_t[1]-0.05, range_t[2]+0.05)) +
   scale_colour_manual(values = c("#4c8424", "#d49404")) +
@@ -162,10 +153,28 @@ q3 <-
 plot(q3)
 
 # plot coexistence conditions
+gc <- c("#747474")
+q4 <-
+  rk |> 
+  dplyr::rename('Niche overlap' = rho,
+                'Fitness diff.' = kapparatio) |>
+  tidyr:: pivot_longer(cols = c("Niche overlap", "Fitness diff."),
+                       names_to = "niche_fitness", 
+                       values_to = "Value") |>
+  ggplot(mapping = aes(x = time, y = Value, colour = niche_fitness)) +
+  geom_line(linewidth = 0.75) +
+  scale_colour_manual(values = c("#2c6ca4", "#bc5404")) +
+  xlab("Generations") +
+  theme_meta() +
+  theme(legend.position = "bottom", 
+        legend.title = element_blank())
+plot(q4)
 
-
-
-
+# export the plots
+plot_list <- list(q1, q2, q3, q4)
+for(i in 1:length(plot_list)) {
+  saveRDS(object = plot_list[[i]], file = paste0("figures-tables/model-trait-", i, ".rds") )
+}
 
 
 # combine the mixture and monoculture data

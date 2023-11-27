@@ -14,6 +14,44 @@ source("code/helper-plotting-theme.R")
 files <- list.files("figures-tables/")
 print(files)
 
+# load the trait evolution files
+trait_names <- files[grepl("model-trait", files)]
+trait_plots <- vector("list", length = length(trait_names))
+for(i in 1:length(trait_names)) {
+  
+  trait_plots[[i]] <- readRDS(file = paste0("figures-tables/", trait_names[i]))
+  
+}
+
+# get relevant legends
+trait_leg1 <- cowplot::get_legend(trait_plots[[1]])
+plot(trait_leg1)
+trait_leg2 <- cowplot::get_legend(trait_plots[[4]])
+plot(trait_leg2)
+
+# remove the legend from the first and last plots
+trait_plots[[1]] <- trait_plots[[1]] + theme(legend.position = "none")
+trait_plots[[4]] <- trait_plots[[4]] + theme(legend.position = "none")
+
+# combine into four panel figure
+q1 <- 
+  cowplot::plot_grid(trait_plots[[2]], trait_plots[[3]], trait_plots[[1]], trait_plots[[4]], 
+                     labels = c("a", "b", "c", "d"),
+                     label_fontface = "plain", label_size = 10,
+                     nrow = 1, ncol = 4, align = "hv", axis = "b", vjust = 1)
+plot(q1)
+
+# export the plot
+ggsave(filename = "figures-tables/fig_pre3.pdf", q1, units = "cm",
+       width = 22, height = 6.5)
+
+# make the legends
+ggsave(filename = "figures-tables/fig_leg1.pdf", trait_leg1, units = "cm",
+       width = 5, height = 1)
+ggsave(filename = "figures-tables/fig_leg2.pdf", trait_leg2, units = "cm",
+       width = 8, height = 1)
+
+
 # load the model files
 mod_names <- files[grepl("model-plot", files)]
 mod_plots <- vector("list", length = length(mod_names))
