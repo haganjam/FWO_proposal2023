@@ -85,7 +85,7 @@ p1 <-
          mapping = aes(x = time, y = Y, colour = Species)) +
   geom_line(linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a+0.5)) +
-  scale_colour_manual(values = c("#4c8424", "#d49404")) +
+  scale_colour_manual(values = c("#2c6ca4", "#d49404")) +
   xlab("Generations") +
   ylab("Biomass in mixture") +
   theme_meta() +
@@ -95,7 +95,7 @@ plot(p1)
 p2 <- 
   ggplot(data = dplyr::filter(mono, species == 1),
        mapping = aes(x = time, y = M)) +
-  geom_line(colour = "#4c8424", linewidth = 0.75) +
+  geom_line(colour = "#2c6ca4", linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a+0.5) ) +
   xlab("Generations") +
   ylab("Biomass in monoculture") +
@@ -123,7 +123,7 @@ q1 <-
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_line(linewidth = 0.75) +
   scale_y_continuous(limits = c(range_t[1]-0.05, range_t[2]+0.05)) +
-  scale_colour_manual(values = c("#4c8424", "#d49404")) +
+  scale_colour_manual(values = c("#2c6ca4", "#d49404")) +
   xlab("Generations") +
   ylab("Trait value in mixture") +
   theme_meta() +
@@ -134,7 +134,7 @@ q2 <-
   ggplot(data = dplyr::filter(mono, species == 1),
          mapping = aes(x = time, y = traitM)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_line(colour = "#4c8424", linewidth = 0.75) +
+  geom_line(colour = "#2c6ca4", linewidth = 0.75) +
   scale_y_continuous(limits = c(range_t[1]-0.05, range_t[2]+0.05)) +
   xlab("Generations") +
   ylab("Trait value in monoculture") +
@@ -162,7 +162,7 @@ q4 <-
                        values_to = "Value") |>
   ggplot(mapping = aes(x = time, y = Value, colour = niche_fitness)) +
   geom_line(linewidth = 0.75) +
-  scale_colour_manual(values = c("#2c6ca4", "#bc5404")) +
+  scale_colour_manual(values = c("black", "red")) +
   xlab("Generations") +
   theme_meta() +
   theme(legend.position = "bottom", 
@@ -198,7 +198,7 @@ p4 <-
   ggplot(data = nbe_df,
        mapping = aes(x = time, y = NBE)) +
   geom_line() +
-  xlab("Time") +
+  xlab("Generations") +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ylab("Net biodiversity effect") +
   scale_y_continuous(limits = c(-0.1, max(nbe_df$NBE) + 0.1)) +

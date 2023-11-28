@@ -145,7 +145,7 @@ p1 <-
          mapping = aes(x = time, y = Y, colour = Species)) +
   geom_line(linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a1+5)) +
-  scale_colour_manual(values = c("#4c8424", "#d49404")) +
+  scale_colour_manual(values = c("#2c6ca4", "#d49404")) +
   xlab("Months") +
   ylab("Biomass in mixture") +
   theme_meta() +
@@ -155,7 +155,7 @@ plot(p1)
 p2 <- 
   ggplot(data = dplyr::filter(mix1, species == "Poa.pra") |> dplyr::mutate(Species = as.character(species)),
          mapping = aes(x = time, y = M)) +
-  geom_line(colour = "#4c8424", linewidth = 0.75) +
+  geom_line(colour = "#2c6ca4", linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a1+5) ) +
   xlab("Months") +
   ylab("Biomass in monoculture") +
@@ -185,7 +185,7 @@ p4 <-
   ggplot(data = nbe1,
          mapping = aes(x = time, y = NBE)) +
   geom_line(linewidth = 0.75) +
-  xlab("Time") +
+  xlab("Months") +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ylab("Net biodiversity effect") +
   scale_y_continuous() +
@@ -245,7 +245,7 @@ p1 <-
          mapping = aes(x = time, y = Y, colour = Species)) +
   geom_line(linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a2+5)) +
-  scale_colour_manual(values = c("#4c8424", "#d49404")) +
+  scale_colour_manual(values = c("#2c6ca4", "#d49404")) +
   xlab("Time") +
   ylab("Biomass in mixture") +
   theme_meta() +
@@ -255,7 +255,7 @@ plot(p1)
 p2 <- 
   ggplot(data = dplyr::filter(mix2, species == "Bel.per") |> dplyr::mutate(Species = as.character(species)),
          mapping = aes(x = time, y = M)) +
-  geom_line(colour = "#4c8424", linewidth = 0.75) +
+  geom_line(colour = "#2c6ca4", linewidth = 0.75) +
   scale_y_continuous(limits = c(0, max_a2+5) ) +
   xlab("Time") +
   ylab("Biomass in monoculture") +
